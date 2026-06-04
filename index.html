@@ -1,0 +1,499 @@
+<!doctype html>
+<html lang="ca">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>L'Anatomia de la Fama en Codi Obert</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:ital,wght@0,300;0,400;1,300&family=DM+Sans:ital,wght@0,300;0,400;1,300&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+
+    <script src="https://d3js.org/d3.v6.js"></script>
+  </head>
+
+  <body>
+    <div id="progress"></div>
+
+    <!-- Side navigation dots -->
+    <nav id="nav" aria-label="Navegació per seccions">
+      <button
+        class="nav-dot active"
+        title="Inici"
+        onclick="scrollTo('hero')"
+      ></button>
+      <button
+        class="nav-dot"
+        title="Context"
+        onclick="scrollTo('context')"
+      ></button>
+      <button
+        class="nav-dot"
+        title="Q1 Complexitat"
+        onclick="scrollTo('q1')"
+      ></button>
+      <button
+        class="nav-dot"
+        title="Q2 Diversitat"
+        onclick="scrollTo('q2')"
+      ></button>
+      <button
+        class="nav-dot"
+        title="Q3 Rànquing"
+        onclick="scrollTo('q3')"
+      ></button>
+      <button
+        class="nav-dot"
+        title="Q4 Arquetips"
+        onclick="scrollTo('q4')"
+      ></button>
+      <button
+        class="nav-dot"
+        title="Conclusions"
+        onclick="scrollTo('conclusion')"
+      ></button>
+    </nav>
+
+    <div id="tooltip"></div>
+
+    <!--  SECCIÓ 0 - PORTADA -->
+    <section class="section" id="hero">
+      <div class="section-inner">
+        <p class="hero-eyebrow">
+          Visualització de dades - Màster Universitari en Ciència de Dades
+          - UOC
+        </p>
+        <h1 class="hero-title">
+          L'Anatomia de la fama en codi obert</span>
+        </h1>
+        <p class="hero-sub">
+          Quins factors expliquen que un repositori de GitHub sigui popular? Es pot deeterminar per mitjà de la complexitat estructural, la diversitat de llenguatges o els patrons de disseny internals? Una anàlisi de 5.113 repositoris per respondre-ho.
+        </p>
+        <div class="scroll-hint">
+          <svg
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path d="M12 5v14M5 12l7 7 7-7" />
+          </svg>
+          Fes scroll per explorar
+        </div>
+      </div>
+    </section>
+
+    <!-- SECCIÓ 1 - CONTEXT  (KPI Cards)
+   -->
+    <section class="section" id="context">
+      <div class="section-inner fade-in">
+        <p class="section-label">00 · Conjunt de dades</p>
+        <h2 class="section-title">El dataset: <em>GitHub en xifres</em></h2>
+        <p class="section-body">
+          Dades extretes de <strong>GitHub Repos</strong> i
+          <strong>GitHub Archive</strong>
+          a través de BigQuery. Cobreix els repositoris de codi obert amb més
+          visibilitat de la plataforma. Preprocessament aplicat: eliminació de
+          valors absents, transformació logarítmica de variables i sampling.
+        </p>
+
+        <!-- KPI CARDS - valors calculats a partir de les dades -->
+        <div class="kpi-grid">
+          <div class="kpi-card">
+            <div class="kpi-num" id="kpi-repos">…</div>
+            <div class="kpi-label">Repositoris analitzats</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-num" id="kpi-langs">…</div>
+            <div class="kpi-label">Llenguatges de programació</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-num" id="kpi-median">…</div>
+            <div class="kpi-label">Watchers (mediana)</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-num" id="kpi-removed">…</div>
+            <div class="kpi-label">Files eliminades (preprocessing)</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!--  SECCIÓ 2 - Q1  (Bubble Chart) -->
+    <section class="section" id="q1">
+      <div class="section-inner fade-in">
+        <p class="section-label">01 - Quina relació existeix entre la popularitat dels repositoris (watch_count) i la seva complexitat estructural, mesurada a través del nombre de fitxers (file_rows), la mida del contingut (total_content_size) i la profunditat del projecte (avg_path_depth)</p>
+        <h2 class="section-title">La complexitat <em>no</em> prediu la fama</h2>
+        <p class="section-body">
+          Cada bombolla és un repositori. Eix X = nombre de fitxers (log), eix Y = watchers (log). La mida codifica el contingut total; el color la profunditat de directoris. La correlació de Pearson mesura com de forta és la relació lineal entre log(fitxers) i log(watchers) en aquestes escales.
+        </p>
+
+        <div class="chart-box" id="chart-q1">
+          <div class="chart-filter" style="margin-bottom: 1rem; display: flex; gap: 0.75rem; align-items: center;">
+            <label for="q1-lang-filter" style="font-size:0.9rem;">Filtrar llenguatge principal:</label>
+            <select id="q1-lang-filter" style="max-width: 220px; padding: 0.45rem 0.6rem; font-size: 0.95rem;">
+              <option value="">Tots</option>
+            </select>
+          </div>
+          <div id="q1-stats" style="font-size:0.95rem; color: var(--muted); margin-bottom: 0.75rem;"></div>
+          <div id="viz_q1"></div>
+        </div>
+
+        <div class="finding">
+          <strong>Key finding:</strong> S'ha observat que no hi ha una relació directa entre la complexitat i la popularitat. I per a cada llenguatge varia.
+        </div>
+      </div>
+    </section>
+
+    <!--  SECCIÓ 3 - Q2  (Ridge Plot + Stacked Bars)
+   -->
+    <section class="section" id="q2">
+      <div class="section-inner fade-in">
+        <p class="section-label">02 - Com es distribueixen els repositoris segons la combinació de llenguatge principal i diversitat tecnològica, i fins a quin punt existeixen patrons clars d'especialització o heterogeneïtat?</p>
+        <h2 class="section-title">
+          Cada ecosistema té la seva <em>signatura tecnològica</em>
+        </h2>
+        <p class="section-body">
+          Distribució de l'entropia lingüística per ecosistema (esquerra) i
+          composició de la diversitat de llenguatges (dreta). C i C++ necessiten
+          codi en múltiples llenguatges per naturalesa; Java i PHP tendeixen al
+          monolingüisme.
+        </p>
+
+        <div class="two-col">
+          <div class="chart-box" id="chart-q2-ridge">
+            <p
+              style="
+                font-family: var(--font-mono);
+                font-size: 0.72rem;
+                color: var(--accent);
+                margin-bottom: 12px;
+                letter-spacing: 0.1em;
+              "
+            >
+              DISTRIBUCIÓ D'ENTROPIA PER ECOSISTEMA
+            </p>
+            <div id="viz_q2_ridge"></div>
+          </div>
+
+          <div class="chart-box" id="chart-q2-bars">
+            <p
+              style="
+                font-family: var(--font-mono);
+                font-size: 0.72rem;
+                color: var(--accent2);
+                margin-bottom: 12px;
+                letter-spacing: 0.1em;
+              "
+            >
+              MIX DE DIVERSITAT PER ECOSISTEMA
+            </p>
+            <div id="viz_q2_bars"></div>
+          </div>
+        </div>
+
+        <div class="finding">
+          <strong>Key finding:</strong> Llenguatges com HTML, C++ o C mostren una entropia molt més elevada quealtres com Java, PHP o C#. Això reflecteix que llenguatges com aquests últims, més orientats a aplicacions web o empresarials, tendeixen a ser més monolingües, mentre que llenguatges com C i C++ s'utilitzen en una àmplia varietat de contextos que requereixen l'ús de múltiples llenguatges o HTML, que sovint s'integra amb altres llenguatges en projectes web (JavaScript i CSS).
+        </div>
+      </div>
+    </section>
+
+    <!-- SECCIÓ 4 - Q3  (Dot-strip + Scatter) -->
+    <section class="section" id="q3">
+      <div class="section-inner fade-in">
+        <p class="section-label">03 - Quins llenguatges principals concentren repositoris amb més complexitat estructural i més diversitat lingüística, i com varia aquesta distribució segons la popularitat dels projectes?</p>
+        <h2 class="section-title">
+          <em>TypeScript, Swift i CSS</em> lideren en popularitat
+        </h2>
+        <p class="section-body">
+          Rànquing de llenguatges per mediana de watchers amb rang
+          interquartílic (esquerra). Dispersió d'entropia vs popularitat per
+          veure si la diversitat tecnològica ajuda (dreta).
+        </p>
+
+        <div class="two-col">
+          <div class="chart-box" id="chart-q3-rank">
+            <p
+              style="
+                font-family: var(--font-mono);
+                font-size: 0.72rem;
+                color: var(--accent4);
+                margin-bottom: 12px;
+                letter-spacing: 0.1em;
+              "
+            >
+              RÀNQUING PER MEDIANA DE WATCHERS
+            </p>
+            <div id="viz_q3_rank"></div>
+          </div>
+
+          <div class="chart-box" id="chart-q3-scatter">
+            <p
+              style="
+                font-family: var(--font-mono);
+                font-size: 0.72rem;
+                color: var(--accent3);
+                margin-bottom: 12px;
+                letter-spacing: 0.1em;
+              "
+            >
+              ENTROPIA vs POPULARITAT
+            </p>
+              <div class="chart-filter" style="margin-bottom: 1rem; display: flex; gap: 0.75rem; align-items: center;">
+              <label for="q3s-lang-filter" style="font-size:0.9rem;">Filtrar llenguatge principal:</label>
+              <select id="q3s-lang-filter" style="max-width: 220px; padding: 0.45rem 0.6rem; font-size: 0.95rem;">
+                <option value="">Tots</option>
+              </select>
+            </div>
+            <div id="q3s-stats" style="font-size:0.95rem; color: var(--muted); margin-bottom: 0.75rem;"></div>
+            <div id="viz_q3_scatter"></div>
+          </div>
+        </div>
+
+        <div class="finding">
+          <strong>Key finding:</strong> TypeScript, Swift i CSS encapçalen el rànquing de popularitat (medianes de 386, 377 i 365 watchers respectivament). La diversitat tecnològica elevada -característica de C++ i HTML- no implica major visibilitat. L'ecosistema de comunitat resulta ser un factor més determinant que la complexitat interna del projecte.
+        </div>
+      </div>
+    </section>
+
+    <!-- SECCIÓ 5 - Q4  (Scatter + Temporal + Profile) -->
+    <section class="section" id="q4">
+      <div class="section-inner fade-in">
+        <p class="section-label">04 - Existeixen diferents “perfils estructurals" de repositoris (per exemple, simples, modulars o complexos) i com es relacionen aquests amb la seva popularitat i antiguitat (first_event_year )?</p>
+        <h2 class="section-title">
+          Quatre <em>arquetips estructurals</em> estables
+        </h2>
+        <p class="section-body">
+          Clustering k-means (k=4) sobre variables estructurals identifica
+          quatre perfils clars. Cap d'ells monopolitza la popularitat: la
+          mediana de watchers varia menys d'un 20% entre clústers.
+        </p>
+
+        <div
+          class="chart-box"
+          id="chart-q4-scatter"
+          style="margin-bottom: 24px"
+        >
+          <p
+            style="
+              font-family: var(--font-mono);
+              font-size: 0.72rem;
+              color: var(--accent);
+              margin-bottom: 12px;
+              letter-spacing: 0.1em;
+            "
+          >
+            ESPAI DE CARACTERÍSTIQUES - 4 PERFILS ESTRUCTURALS
+          </p>
+          <div id="viz_q4_scatter"></div>
+        </div>
+
+        <div class="two-col">
+          <div class="chart-box" id="chart-q4-temporal">
+            <p
+              style="
+                font-family: var(--font-mono);
+                font-size: 0.72rem;
+                color: var(--accent5);
+                margin-bottom: 12px;
+                letter-spacing: 0.1em;
+              "
+            >
+              COMPOSICIÓ PER ANY DE COHORT
+            </p>
+            <div id="viz_q4_temporal"></div>
+          </div>
+
+          <div class="chart-box" id="chart-q4-profile">
+            <p
+              style="
+                font-family: var(--font-mono);
+                font-size: 0.72rem;
+                color: var(--accent2);
+                margin-bottom: 12px;
+                letter-spacing: 0.1em;
+              "
+            >
+              EMPREMTA ESTRUCTURAL PER CLÚSTER
+            </p>
+            <div id="viz_q4_profile"></div>
+          </div>
+        </div>
+
+        <div class="finding">
+          <strong>Key finding:</strong> Els quatre arquetips estructurals es distribueixen de forma consistent al llarg de tots els anys (2011-2016), sense que cap perfil hagi guanyat o perdut pes significatiu amb el temps. Malgrat les diferències estructurals evidents entre clústers, la mediana de watchers varia menys d'un 20% entre ells, cosa que confirma que l'arquitectura interna no és un predictor rellevant de la popularitat.
+        </div>
+      </div>
+    </section>
+
+    <!-- SECCIÓ 6 - CONCLUSIONS  -->
+    <section class="section" id="conclusion">
+      <div class="section-inner fade-in">
+        <p class="section-label">05 · Conclusions</p>
+        <h2 class="section-title">
+          La popularitat no es compra <em>amb mida</em>
+        </h2>
+        <p class="section-body">
+          Respostes a les preguntes plantejades.
+        </p>
+
+        <div class="conclusion-grid">
+          <div class="conclusion-card">
+            <div class="icon">X</div>
+            <h3>La complexitat no prediu watchers</h3>
+            <p>
+              La correlació entre log(fitxers) i log(watchers) és molt baixa, i caldria analitzar cada llengüatge principal per separat. A més, molts repositoris combinen varis llenguatges, fent que la complexitat sigui més difícil de mesurar i interpretar.
+            </p>
+          </div>
+          <div class="conclusion-card">
+            <div class="icon">✓</div>
+            <h3>El llenguatge importa</h3>
+            <p>
+              TypeScript (386), Swift (377) i CSS (365) superen Ruby (249) i C# (238) en mediana de watchers. L'adopció i la comunitat activa de l'ecosistema pot marcar la diferència.
+            </p>
+          </div>
+          <div class="conclusion-card">
+            <div class="icon">✓</div>
+            <h3>Existeixen 4 arquetips estables</h3>
+            <p>
+              Els quatre perfils apareixen en totes les cohorts temporals analitzades, del 2011 al 2016.
+            </p>
+          </div>
+          <div class="conclusion-card">
+            <div class="icon">→</div>
+            <h3>La rellevància és el factor determinant</h3>
+            <p>
+              Cap variable estructural analitzada -mida, profunditat, diversitat, arquetip- explica la popularitat de forma consistent. El que determina la fama és externa al codi: la utilitat percebuda i l'energia de la comunitat.
+            </p>
+          </div>
+        </div>
+
+        <p
+          style="
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            color: var(--muted);
+            margin-top: 48px;
+            padding-top: 24px;
+            border-top: 1px solid var(--border);
+          "
+        >
+          Guillem Güell Paule · Visualització de dades · UOC · 2025–2026
+          &nbsp;·&nbsp;
+          <a href="https://github.com/" style="color: var(--accent); text-decoration: none">
+            Codi font al repositori →
+          </a>
+          &nbsp;·&nbsp;
+          <a href="https://doi.org/10.5281/zenodo.19625515" style="color: var(--accent); text-decoration: none">
+            Dataset a Zenodo →
+          </a>
+        </p>
+      </div>
+    </section>
+
+    <script>
+      function formatNumber(value) {
+        return value.toLocaleString?.() ?? String(value);
+      }
+
+      function median(values) {
+        const sorted = values.slice().sort((a, b) => a - b);
+        const mid = Math.floor(sorted.length / 2);
+        return sorted.length % 2 === 0
+          ? (sorted[mid - 1] + sorted[mid]) / 2
+          : sorted[mid];
+      }
+
+      function fillKpiCards(original, preprocessed) {
+        const repoCount = preprocessed.length;
+        const languages = new Set(preprocessed.map((d) => d.primary_language)).size;
+        const watches = preprocessed
+          .map((d) => Number(d.watch_count))
+          .filter((v) => !Number.isNaN(v));
+        const medianWatch = Math.round(median(watches));
+        const removedCount = Math.max(0, original.length - preprocessed.length);
+
+        document.getElementById("kpi-repos").textContent = formatNumber(repoCount);
+        document.getElementById("kpi-langs").textContent = formatNumber(languages);
+        document.getElementById("kpi-median").textContent = formatNumber(medianWatch);
+        document.getElementById("kpi-removed").textContent = formatNumber(removedCount);
+      }
+
+      d3.csv("data/top_github_repos_enriched.csv").then((original) => {
+        d3.csv("data/top_github_repos_enriched_preprocessed.csv").then((preprocessed) => {
+          fillKpiCards(original, preprocessed);
+        });
+      });
+
+      window.addEventListener("scroll", () => {
+        const pct =
+          (window.scrollY / (document.body.scrollHeight - window.innerHeight)) *
+          100;
+        document.getElementById("progress").style.width = pct + "%";
+      });
+
+      const sections = [
+        "hero",
+        "context",
+        "q1",
+        "q2",
+        "q3",
+        "q4",
+        "conclusion",
+      ];
+      const navDots = document.querySelectorAll(".nav-dot");
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((e) => {
+            if (e.isIntersecting) {
+              const idx = sections.indexOf(e.target.id);
+              navDots.forEach((d, i) =>
+                d.classList.toggle("active", i === idx),
+              );
+            }
+          });
+        },
+        { threshold: 0.4 },
+      );
+      sections.forEach((id) => {
+        const el = document.getElementById(id);
+        if (el) observer.observe(el);
+      });
+
+      // ── Smooth scroll from nav ───────────────────────────────────────
+      function scrollTo(id) {
+        document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+      }
+
+      // ── Fade-in on scroll ────────────────────────────────────────────
+      const fadeObserver = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((e) => {
+            if (e.isIntersecting) {
+              e.target.classList.add("visible");
+            }
+          });
+        },
+        { threshold: 0.1 },
+      );
+      document
+        .querySelectorAll(".fade-in")
+        .forEach((el) => fadeObserver.observe(el));
+    </script>
+
+    <script src="js/q1_bubble.js"></script>
+    <script src="js/q2_ridge.js"></script>
+    <script src="js/q2_stacked.js"></script>
+    <script src="js/q3_lollipop.js"></script>
+    <script src="js/q3_scatter.js"></script>
+    <script src="js/q4_scatter.js"></script>
+    <script src="js/q4_temporal.js"></script>
+    <script src="js/q4_profile.js"></script>
+  </body>
+</html>

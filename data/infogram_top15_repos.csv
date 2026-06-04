@@ -1,0 +1,16 @@
+repo_project,repo_owner,primary_language,watch_count,file_rows,avg_path_depth
+tensorflow,tensorflow,C++,4141.7,3635.0,4.0
+react,facebook,JavaScript,4141.7,1082.0,2.87
+react-native,facebook,JavaScript,4141.7,2601.0,4.49
+vue,vuejs,TypeScript,4141.7,197.0,2.66
+bootstrap,twbs,JavaScript,4141.7,374.0,2.25
+caravel,airbnb,Python,4141.7,247.0,2.72
+bulma,jgthms,CSS,4141.7,57.0,1.53
+cash,dthree,JavaScript,4141.7,353.0,2.29
+AlphaGo,Rochester-NRT,JavaScript,4141.7,63.0,1.9
+swift,apple,C++,4141.7,6690.42,2.38
+oh-my-zsh,robbyrussell,Shell,4141.7,548.0,1.72
+draft-js,facebook,JavaScript,4141.7,259.0,2.82
+bitbar,matryer,Objective-C,4141.7,65.0,2.23
+vscode,Microsoft,TypeScript,4141.7,4784.0,6.42
+AlgorithmVisualizer,parkjs814,HTML,4141.7,633.0,3.23

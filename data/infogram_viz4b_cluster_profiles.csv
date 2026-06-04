@@ -1,0 +1,5 @@
+cluster,n,median_watch,median_files,median_path_depth,median_languages,median_binary_ratio,median_entropy
+Repositoris petits,1956,283.5,40.0,1.217,2.0,0.0,0.101
+Repositoris mitjans,524,295.5,92.0,2.483,3.0,0.5,0.13
+Repositoris profunds,1939,325.0,165.0,2.62,3.0,0.0,0.179
+Repositoris grans,693,339.0,1267.0,4.402,7.0,0.033,0.596
