@@ -212,6 +212,12 @@
           El dot-plot de l'esquerra rànkeja els 15 ecosistemes per mediana de watchers. Cada punt és la mediana; la línia horitzontal mostra el rang interquartílic, és a dir, on se situa el 50% central dels repositoris d'aquell ecosistema. El scatter de la dreta creua l'entropia lingüística amb la popularitat per veure si la diversitat tecnològica ajuda. Podeu seleccionar un llenguatge des del dot-plot o des del desplegable del scatter - la selecció es propaga entre els dos gràfics.
         </p>
 
+        <div class="chart-filter" style="margin-bottom: 1rem; display: flex; gap: 0.75rem; align-items: center;">
+          <label for="q3s-lang-filter" style="font-size:0.9rem;">Filtrar llenguatge principal:</label>
+          <select id="q3s-lang-filter" style="max-width: 220px; padding: 0.45rem 0.6rem; font-size: 0.95rem;">
+            <option value="">Tots</option>
+          </select>
+        </div>
         <div class="two-col">
           <div class="chart-box" id="chart-q3-rank">
             <p
@@ -240,12 +246,6 @@
             >
               ENTROPIA vs POPULARITAT
             </p>
-              <div class="chart-filter" style="margin-bottom: 1rem; display: flex; gap: 0.75rem; align-items: center;">
-              <label for="q3s-lang-filter" style="font-size:0.9rem;">Filtrar llenguatge principal:</label>
-              <select id="q3s-lang-filter" style="max-width: 220px; padding: 0.45rem 0.6rem; font-size: 0.95rem;">
-                <option value="">Tots</option>
-              </select>
-            </div>
             <div id="q3s-stats" style="font-size:0.95rem; color: var(--muted); margin-bottom: 0.75rem;"></div>
             <div id="viz_q3_scatter"></div>
           </div>
@@ -287,7 +287,7 @@
           <div id="viz_q4_scatter"></div>
         </div>
 
-        <div class="two-col">
+        <div class="two-col" style="grid-template-columns: 3fr 4fr;">
           <div class="chart-box" id="chart-q4-temporal">
             <p
               style="
@@ -298,7 +298,7 @@
                 letter-spacing: 0.1em;
               "
             >
-              COMPOSICIÓ PER ANY DE COHORT
+              COMPOSICIÓ PER ANY
             </p>
             <div id="viz_q4_temporal"></div>
           </div>
@@ -320,7 +320,7 @@
         </div>
 
         <div class="finding">
-          <strong>Key finding:</strong> Els quatre perfils apareixen en tots els anys disponibles (2011, 2015 i 2016; el 2012 té tan sols 62 repositoris). El 2016 mostra un canvi: els repositoris petits pugen del 35% al 47% i els grans cauen del 14% al 7,6%, possiblement perquè GitHub va atreure projectes més joves i lleugans en els últims anys del dataset. Quant a popularitat, la mediana de watchers va de 283 (petits) a 339 (grans) - una diferència d'uns 56 watchers entre els extrems. L'arquitectura interna no explica la popularitat.
+          <strong>Key finding:</strong> El 2016 mostra un canvi: els repositoris petits pugen del 35% al 47% i els grans cauen del 14% al 7,6%, possiblement perquè GitHub va atreure projectes més joves en els últims anys del dataset. L'arquitectura interna tampoc explica la popularitat.
         </div>
       </div>
     </section>
@@ -336,36 +336,31 @@
           Respostes a les preguntes plantejades.
         </p>
 
-        <div class="conclusion-grid">
-          <div class="conclusion-card">
-            <div class="icon">X</div>
-            <h3>La complexitat no prediu watchers</h3>
-            <p>
-              La correlació de Pearson entre log(fitxers) i log(watchers) és r = 0,13 - pràcticament nul·la. La variació és similar analitzant cada llenguatge per separat. Tenir un projecte gran o profund no garanteix visibilitat.
-            </p>
-          </div>
-          <div class="conclusion-card">
-            <div class="icon">✓</div>
-            <h3>El llenguatge importa</h3>
-            <p>
-              TypeScript (386), Swift (377) i CSS (365) superen àmpliament Ruby (249) i C# (238) en mediana de watchers. La vitalitat de l'ecosistema i la comunitat activa del llenguatge marquen la diferència, no la complexitat del codi.
-            </p>
-          </div>
-          <div class="conclusion-card">
-            <div class="icon">✓</div>
-            <h3>Existeixen 4 perfils estructurals</h3>
-            <p>
-              Els quatre perfils (petits, mitjans, profunds i grans) apareixen de forma consistent en tots els anys disponibles. El 2016 mostra una lleugera tendència cap a projectes més petits, però els perfils es mantenen identificables.
-            </p>
-          </div>
-          <div class="conclusion-card">
-            <div class="icon">→</div>
-            <h3>La rellevància és el factor determinant</h3>
-            <p>
-              Cap variable estructural analitzada - mida, profunditat, diversitat lingüística, perfil de clúster - explica la popularitat de forma consistent. El que determina la fama és extern al codi: la utilitat percebuda i l'energia de la comunitat al voltant del projecte.
-            </p>
-          </div>
+       <div class="conclusion-grid">
+        <div class="conclusion-card">
+          <div class="icon">x</div>
+          <h3>La complexitat no prediu watchers</h3>
+          <p>
+            La correlació de Pearson entre log(fitxers) i log(watchers) és r = 0,13 - pràcticament nul·la. El mateix passa quan analitzem cada llenguatge per separat. Tenir molts fitxers o un projecte gran no implica més visibilitat.
+          </p>
         </div>
+
+        <div class="conclusion-card">
+          <div class="icon">✓</div>
+          <h3>Cada ecosistema té la seva signatura</h3>
+          <p>
+            Els ecosistemes mostren patrons propis de diversitat i estructura, però aquestes diferències no es tradueixen de manera consistent en més watchers. La manera d'organitzar el codi varia molt més que la popularitat.
+          </p>
+        </div>
+
+        <div class="conclusion-card">
+          <div class="icon">→</div>
+          <h3>No hi ha una recepta a la popularitat</h3>
+          <p>
+            Cap variable estructural analitzada - mida, profunditat, diversitat lingüística o llenguatge principal, perfil de clúster - explica la popularitat de forma consistent i clara. El que determina la fama és extern a les variables observades i segurament té a veure amb la qualitat i l'interès del producte desenvolupat amb el codi del repositori.
+          </p>
+        </div>
+      </div>
 
         <p
           style="

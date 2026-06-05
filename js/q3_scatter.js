@@ -62,6 +62,11 @@ d3.csv("data/infogram_viz1_bubble.csv").then(function (data) {
     .text((d) => d);
   languageSelectQ3s.on("change", function () {
     selectedLanguage = this.value || null;
+    window.dispatchEvent(
+      new CustomEvent("q3LanguageSelected", {
+        detail: { language: selectedLanguage },
+      }),
+    );
     if (selectedLanguage) {
       highlightLanguage(selectedLanguage);
     } else {
@@ -134,7 +139,12 @@ d3.csv("data/infogram_viz1_bubble.csv").then(function (data) {
   const toggleLanguage = function (event, d) {
     selectedLanguage =
       selectedLanguage === d.primary_language ? null : d.primary_language;
-    languageSelectQ3s.property("value", selectedLanguage || ""); // ← afegeix això
+    languageSelectQ3s.property("value", selectedLanguage || "");
+    window.dispatchEvent(
+      new CustomEvent("q3LanguageSelected", {
+        detail: { language: selectedLanguage },
+      }),
+    );
     if (selectedLanguage) {
       highlightLanguage(selectedLanguage);
     } else {

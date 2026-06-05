@@ -34,9 +34,9 @@ d3.csv("data/infogram_viz4b_cluster_profiles.csv").then(function (rawData) {
   );
 
   const cfg = {
-    w: 230,
-    h: 230,
-    margin: { top: 60, right: 65, bottom: 60, left: 60 },
+    w: 180,
+    h: 180,
+    margin: { top: 45, right: 50, bottom: 45, left: 200 },
     levels: 4,
     maxValue: 1,
     labelFactor: 1.3,
@@ -56,9 +56,15 @@ d3.csv("data/infogram_viz4b_cluster_profiles.csv").then(function (rawData) {
   const rScale = d3.scaleLinear().range([0, radius]).domain([0, cfg.maxValue]);
 
   d3.select("#viz_q4_profile").select("svg").remove();
+  d3.select("#viz_q4_profile").select("svg").remove();
+  d3.select("#viz_q4_profile").select(".radar-svg-wrap").remove(); // per si es redibuja
 
-  const svgRadar = d3
+  const radarWrap = d3
     .select("#viz_q4_profile")
+    .append("div")
+    .attr("class", "radar-svg-wrap");
+
+  const svgRadar = radarWrap
     .append("svg")
     .attr("width", cfg.w + cfg.margin.left + cfg.margin.right)
     .attr("height", cfg.h + cfg.margin.top + cfg.margin.bottom)
@@ -311,4 +317,99 @@ d3.csv("data/infogram_viz4b_cluster_profiles.csv").then(function (rawData) {
       const parentData = d3.select(this.parentNode).datum();
       toggleCluster(event, data.indexOf(parentData));
     });
+
+  const tableContainer = d3
+    .select("#viz_q4_profile")
+    .append("div")
+    .attr("id", "radar-table")
+    .style("margin-top", "16px")
+    .style("font-family", "var(--font-mono)")
+    .style("font-size", "0.72rem")
+    .style("color", "#e2e8f5")
+    .style("overflow-x", "auto");
+
+  const table = tableContainer
+    .append("table")
+    .style("border-collapse", "collapse")
+    .style("width", "100%");
+
+  // Capçalera
+  const thead = table.append("thead");
+  const headerRow = thead.append("tr");
+  ["Perfil", "Fitxers", "Profunditat", "Llenguatges", "Entropia"].forEach(
+    (h) => {
+      headerRow
+        .append("th")
+        .text(h)
+        .style("padding", "4px 10px")
+        .style("border-bottom", "1px solid var(--border)")
+        .style("text-align", h === "Perfil" ? "left" : "right")
+        .style("color", "var(--muted)")
+        .style("letter-spacing", "0.05em");
+    },
+  );
+
+  // Files de dades
+  const tbody = table.append("tbody");
+
+  const realFields = [
+    "median_files",
+    "median_path_depth",
+    "median_languages",
+    "median_entropy",
+  ];
+  const fmt = [
+    d3.format(".0f"),
+    d3.format(".2f"),
+    d3.format(".1f"),
+    d3.format(".2f"),
+  ];
+
+  rawData.forEach((d) => {
+    const color = clusterColors[d.cluster] || "#e2e8f5";
+    const tr = tbody
+      .append("tr")
+      .attr("class", "radar-table-row")
+      .attr("data-cluster", d.cluster)
+      .style("cursor", "pointer")
+      .style("transition", "opacity 0.2s");
+
+    tr.append("td")
+      .text(d.cluster)
+      .style("padding", "4px 10px")
+      .style("border-left", "3px solid " + color)
+      .style("padding-left", "8px");
+
+    realFields.forEach((f, i) => {
+      tr.append("td")
+        .text(fmt[i](+d[f]))
+        .style("padding", "4px 10px")
+        .style("text-align", "right");
+    });
+
+    tr.on("click", function () {
+      const clicked = d.cluster;
+      selectedCluster = selectedCluster === clicked ? null : clicked;
+      window.dispatchEvent(
+        new CustomEvent("q4ClusterSelected", {
+          detail: { cluster: selectedCluster },
+        }),
+      );
+      applySelection();
+      syncTableSelection();
+    });
+  });
+
+  // Sincronitza la taula quan canvia la selecció
+  function syncTableSelection() {
+    tbody.selectAll(".radar-table-row").style("opacity", function () {
+      const rowCluster = d3.select(this).attr("data-cluster");
+      return !selectedCluster || rowCluster === selectedCluster ? 1 : 0.3;
+    });
+  }
+
+  // Escolta canvis externs (des del scatter o temporal)
+  window.addEventListener("q4ClusterSelected", function () {
+    syncTableSelection();
+  });
 });
