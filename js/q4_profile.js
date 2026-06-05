@@ -365,40 +365,43 @@ d3.csv("data/infogram_viz4b_cluster_profiles.csv").then(function (rawData) {
     d3.format(".2f"),
   ];
 
-  rawData.forEach((d) => {
-    const color = clusterColors[d.cluster] || "#e2e8f5";
-    const tr = tbody
-      .append("tr")
-      .attr("class", "radar-table-row")
-      .attr("data-cluster", d.cluster)
-      .style("cursor", "pointer")
-      .style("transition", "opacity 0.2s");
+  rawData
+    .slice()
+    .reverse()
+    .forEach((d) => {
+      const color = clusterColors[d.cluster] || "#e2e8f5";
+      const tr = tbody
+        .append("tr")
+        .attr("class", "radar-table-row")
+        .attr("data-cluster", d.cluster)
+        .style("cursor", "pointer")
+        .style("transition", "opacity 0.2s");
 
-    tr.append("td")
-      .text(d.cluster)
-      .style("padding", "4px 10px")
-      .style("border-left", "3px solid " + color)
-      .style("padding-left", "8px");
-
-    realFields.forEach((f, i) => {
       tr.append("td")
-        .text(fmt[i](+d[f]))
+        .text(d.cluster)
         .style("padding", "4px 10px")
-        .style("text-align", "right");
-    });
+        .style("border-left", "3px solid " + color)
+        .style("padding-left", "8px");
 
-    tr.on("click", function () {
-      const clicked = d.cluster;
-      selectedCluster = selectedCluster === clicked ? null : clicked;
-      window.dispatchEvent(
-        new CustomEvent("q4ClusterSelected", {
-          detail: { cluster: selectedCluster },
-        }),
-      );
-      applySelection();
-      syncTableSelection();
+      realFields.forEach((f, i) => {
+        tr.append("td")
+          .text(fmt[i](+d[f]))
+          .style("padding", "4px 10px")
+          .style("text-align", "right");
+      });
+
+      tr.on("click", function () {
+        const clicked = d.cluster;
+        selectedCluster = selectedCluster === clicked ? null : clicked;
+        window.dispatchEvent(
+          new CustomEvent("q4ClusterSelected", {
+            detail: { cluster: selectedCluster },
+          }),
+        );
+        applySelection();
+        syncTableSelection();
+      });
     });
-  });
 
   // Sincronitza la taula quan canvia la selecció
   function syncTableSelection() {
