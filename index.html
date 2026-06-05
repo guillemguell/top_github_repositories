@@ -24,37 +24,37 @@
       <button
         class="nav-dot active"
         title="Inici"
-        onclick="scrollTo('hero')"
+        onclick="scrollToSection('hero')"
       ></button>
       <button
         class="nav-dot"
         title="Context"
-        onclick="scrollTo('context')"
+        onclick="scrollToSection('context')"
       ></button>
       <button
         class="nav-dot"
         title="Q1 Complexitat"
-        onclick="scrollTo('q1')"
+        onclick="scrollToSection('q1')"
       ></button>
       <button
         class="nav-dot"
         title="Q2 Diversitat"
-        onclick="scrollTo('q2')"
+        onclick="scrollToSection('q2')"
       ></button>
       <button
         class="nav-dot"
         title="Q3 Rànquing"
-        onclick="scrollTo('q3')"
+        onclick="scrollToSection('q3')"
       ></button>
       <button
         class="nav-dot"
         title="Q4 Arquetips"
-        onclick="scrollTo('q4')"
+        onclick="scrollToSection('q4')"
       ></button>
       <button
         class="nav-dot"
         title="Conclusions"
-        onclick="scrollTo('conclusion')"
+        onclick="scrollToSection('conclusion')"
       ></button>
     </nav>
 
@@ -71,7 +71,7 @@
           L'Anatomia de la fama en codi obert</span>
         </h1>
         <p class="hero-sub">
-          Quins factors expliquen que un repositori de GitHub sigui popular? Es pot deeterminar per mitjà de la complexitat estructural, la diversitat de llenguatges o els patrons de disseny internals? Una anàlisi de 5.113 repositoris per respondre-ho.
+          Quins factors expliquen que un repositori de GitHub sigui popular? Es pot determinar per mitjà de la complexitat estructural, la diversitat de llenguatges o els patrons de disseny interns? Una anàlisi de 5.113 repositoris per respondre-ho.
         </p>
         <div class="scroll-hint">
           <svg
@@ -131,7 +131,7 @@
         <p class="section-label">01 - Quina relació existeix entre la popularitat dels repositoris (watch_count) i la seva complexitat estructural, mesurada a través del nombre de fitxers (file_rows), la mida del contingut (total_content_size) i la profunditat del projecte (avg_path_depth)</p>
         <h2 class="section-title">La complexitat <em>no</em> prediu la fama</h2>
         <p class="section-body">
-          Cada bombolla és un repositori. Eix X = nombre de fitxers (log), eix Y = watchers (log). La mida codifica el contingut total; el color la profunditat de directoris. La correlació de Pearson mesura com de forta és la relació lineal entre log(fitxers) i log(watchers) en aquestes escales.
+          Cada bombolla és un repositori. L'eix X representa el nombre de fitxers en escala logarítmica, l'eix Y els watchers també en escala logarítmica, i la mida de cada bombolla codifica el contingut total del repositori. El color indica el llenguatge principal. Podeu filtrar per llenguatge amb el selector: el gràfic recalcula automàticament la correlació de Pearson i la línia de regressió per als repositoris visibles. Feu clic sobre qualsevol punt per ressaltar tot l'ecosistema d'aquell repositori.
         </p>
 
         <div class="chart-box" id="chart-q1">
@@ -146,7 +146,7 @@
         </div>
 
         <div class="finding">
-          <strong>Key finding:</strong> S'ha observat que no hi ha una relació directa entre la complexitat i la popularitat. I per a cada llenguatge varia.
+          <strong>Key finding:</strong> La correlació de Pearson entre log(fitxers) i log(watchers) és r = 0,13 - pràcticament nul·la. Tenir molts fitxers o ser un projecte gran no implica tenir més watchers. La relació varia per ecosistema, però en cap cas és prou forta per ser predictiva.
         </div>
       </div>
     </section>
@@ -160,10 +160,7 @@
           Cada ecosistema té la seva <em>signatura tecnològica</em>
         </h2>
         <p class="section-body">
-          Distribució de l'entropia lingüística per ecosistema (esquerra) i
-          composició de la diversitat de llenguatges (dreta). C i C++ necessiten
-          codi en múltiples llenguatges per naturalesa; Java i PHP tendeixen al
-          monolingüisme.
+          El ridge plot de l'esquerra mostra la distribució d'entropia lingüística per a cada ecosistema - com de "barrejat" és el codi dels repositoris de cada grup. Cada cresta representa un ecosistema; el punt blanc és la mediana. Com més desplaçada cap a la dreta, més heterogeni és el codi. Les barres apilades de la dreta desglossen la proporció de repositoris segons quants llenguatges totals utilitzen: d'un sol fins a deu o més. Passant el cursor per sobre de qualsevol element apareix el detall exacte.
         </p>
 
         <div class="two-col">
@@ -199,7 +196,7 @@
         </div>
 
         <div class="finding">
-          <strong>Key finding:</strong> Llenguatges com HTML, C++ o C mostren una entropia molt més elevada quealtres com Java, PHP o C#. Això reflecteix que llenguatges com aquests últims, més orientats a aplicacions web o empresarials, tendeixen a ser més monolingües, mentre que llenguatges com C i C++ s'utilitzen en una àmplia varietat de contextos que requereixen l'ús de múltiples llenguatges o HTML, que sovint s'integra amb altres llenguatges en projectes web (JavaScript i CSS).
+          <strong>Key finding:</strong> C++ (mediana d'entropia 0,62) i C (0,60) i HTML (0,76) i CSS (0,73) mostren una diversitat lingüística molt superior a Java (0,00) o PHP (0,03). Els primers s'utilitzen en contextos que requereixen múltiples llenguatges per naturalesa - assemblador, scripts de build, codi web - mentre que Java i PHP tendeixen a ser ecosistemes autosuficients. Cada comunitat té una signatura d'heterogeneïtat pròpia i recognoscible.
         </div>
       </div>
     </section>
@@ -212,9 +209,7 @@
           <em>TypeScript, Swift i CSS</em> lideren en popularitat
         </h2>
         <p class="section-body">
-          Rànquing de llenguatges per mediana de watchers amb rang
-          interquartílic (esquerra). Dispersió d'entropia vs popularitat per
-          veure si la diversitat tecnològica ajuda (dreta).
+          El dot-plot de l'esquerra rànkeja els 15 ecosistemes per mediana de watchers. Cada punt és la mediana; la línia horitzontal mostra el rang interquartílic, és a dir, on se situa el 50% central dels repositoris d'aquell ecosistema. El scatter de la dreta creua l'entropia lingüística amb la popularitat per veure si la diversitat tecnològica ajuda. Podeu seleccionar un llenguatge des del dot-plot o des del desplegable del scatter - la selecció es propaga entre els dos gràfics.
         </p>
 
         <div class="two-col">
@@ -257,7 +252,7 @@
         </div>
 
         <div class="finding">
-          <strong>Key finding:</strong> TypeScript, Swift i CSS encapçalen el rànquing de popularitat (medianes de 386, 377 i 365 watchers respectivament). La diversitat tecnològica elevada -característica de C++ i HTML- no implica major visibilitat. L'ecosistema de comunitat resulta ser un factor més determinant que la complexitat interna del projecte.
+          <strong>Key finding:</strong> TypeScript (386), Swift (377) i CSS (365) encapçalen el rànquing, mentre que Ruby (249) i C# (238) queden al final. Però la diversitat tecnològica elevada no implica més popularitat: C++, amb la tercera entropia més alta (0,62), se situa al mig de la taula amb 298 watchers de mediana. El que diferencia els ecosistemes líders no és la complexitat interna, sinó la vitalitat de la seva comunitat en el període analitzat.
         </div>
       </div>
     </section>
@@ -270,9 +265,7 @@
           Quatre <em>arquetips estructurals</em> estables
         </h2>
         <p class="section-body">
-          Clustering k-means (k=4) sobre variables estructurals identifica
-          quatre perfils clars. Cap d'ells monopolitza la popularitat: la
-          mediana de watchers varia menys d'un 20% entre clústers.
+          Un clustering k-means (k=4) sobre variables estructurals identifica quatre perfils. El scatter superior mostra tots els repositoris en l'espai de fitxers versus profunditat de directoris, acolorits per perfil. Les barres temporals mostren com es distribueixen els perfils any a any. El radar mostra l'empremta de cada perfil en quatre dimensions: fitxers, profunditat, nombre de llenguatges i entropia. Fent clic sobre qualsevol element es ressalta el perfil corresponent als tres gràfics simultàniament.
         </p>
 
         <div
@@ -327,7 +320,7 @@
         </div>
 
         <div class="finding">
-          <strong>Key finding:</strong> Els quatre arquetips estructurals es distribueixen de forma consistent al llarg de tots els anys (2011-2016), sense que cap perfil hagi guanyat o perdut pes significatiu amb el temps. Malgrat les diferències estructurals evidents entre clústers, la mediana de watchers varia menys d'un 20% entre ells, cosa que confirma que l'arquitectura interna no és un predictor rellevant de la popularitat.
+          <strong>Key finding:</strong> Els quatre perfils apareixen en tots els anys disponibles (2011, 2015 i 2016; el 2012 té tan sols 62 repositoris). El 2016 mostra un canvi: els repositoris petits pugen del 35% al 47% i els grans cauen del 14% al 7,6%, possiblement perquè GitHub va atreure projectes més joves i lleugans en els últims anys del dataset. Quant a popularitat, la mediana de watchers va de 283 (petits) a 339 (grans) - una diferència d'uns 56 watchers entre els extrems. L'arquitectura interna no explica la popularitat.
         </div>
       </div>
     </section>
@@ -348,28 +341,28 @@
             <div class="icon">X</div>
             <h3>La complexitat no prediu watchers</h3>
             <p>
-              La correlació entre log(fitxers) i log(watchers) és molt baixa, i caldria analitzar cada llengüatge principal per separat. A més, molts repositoris combinen varis llenguatges, fent que la complexitat sigui més difícil de mesurar i interpretar.
+              La correlació de Pearson entre log(fitxers) i log(watchers) és r = 0,13 - pràcticament nul·la. La variació és similar analitzant cada llenguatge per separat. Tenir un projecte gran o profund no garanteix visibilitat.
             </p>
           </div>
           <div class="conclusion-card">
             <div class="icon">✓</div>
             <h3>El llenguatge importa</h3>
             <p>
-              TypeScript (386), Swift (377) i CSS (365) superen Ruby (249) i C# (238) en mediana de watchers. L'adopció i la comunitat activa de l'ecosistema pot marcar la diferència.
+              TypeScript (386), Swift (377) i CSS (365) superen àmpliament Ruby (249) i C# (238) en mediana de watchers. La vitalitat de l'ecosistema i la comunitat activa del llenguatge marquen la diferència, no la complexitat del codi.
             </p>
           </div>
           <div class="conclusion-card">
             <div class="icon">✓</div>
-            <h3>Existeixen 4 arquetips estables</h3>
+            <h3>Existeixen 4 perfils estructurals</h3>
             <p>
-              Els quatre perfils apareixen en totes les cohorts temporals analitzades, del 2011 al 2016.
+              Els quatre perfils (petits, mitjans, profunds i grans) apareixen de forma consistent en tots els anys disponibles. El 2016 mostra una lleugera tendència cap a projectes més petits, però els perfils es mantenen identificables.
             </p>
           </div>
           <div class="conclusion-card">
             <div class="icon">→</div>
             <h3>La rellevància és el factor determinant</h3>
             <p>
-              Cap variable estructural analitzada -mida, profunditat, diversitat, arquetip- explica la popularitat de forma consistent. El que determina la fama és externa al codi: la utilitat percebuda i l'energia de la comunitat.
+              Cap variable estructural analitzada - mida, profunditat, diversitat lingüística, perfil de clúster - explica la popularitat de forma consistent. El que determina la fama és extern al codi: la utilitat percebuda i l'energia de la comunitat al voltant del projecte.
             </p>
           </div>
         </div>
@@ -384,7 +377,7 @@
             border-top: 1px solid var(--border);
           "
         >
-          Guillem Güell Paule · Visualització de dades · UOC · 2025–2026
+          Guillem Güell Paule · Visualització de dades · UOC · 2025-2026
           &nbsp;·&nbsp;
           <a href="https://github.com/guillemguell/top_github_repositories" style="color: var(--accent); text-decoration: none">
             Codi font al repositori →
@@ -467,7 +460,7 @@
       });
 
       // ── Smooth scroll from nav ───────────────────────────────────────
-      function scrollTo(id) {
+      function scrollToSection(id) {
         document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
       }
 
